@@ -1,7 +1,8 @@
 # KB.AI.Usage
 
 A system-tray app that tracks your AI tool usage locally. No telemetry, no cloud.
-Monitors tokens, costs, and rate limits for: Anthropic API, Claude.ai, OpenAI API, ChatGPT, GitHub Copilot.
+Monitors rate limits and quotas for **Claude.ai**, **ChatGPT**, and **GitHub Copilot** —
+connect each from inside the app, no manual token pasting.
 
 ![AI Usage app window showing Claude.ai and usage tiles](./docs/screenshots/app-preview.png)
 
@@ -52,34 +53,33 @@ Requires a tray library: `libappindicator3-1`
 
 ## First launch
 
-The app appears in the system tray. Click the icon → Open to see the usage tiles.
+The app appears in the system tray. Click the tray icon (or choose **Status** from the tray menu) to see the dashboard,
+then the **⚙ gear** to open Settings.
 
-Edit the config file and fill in your API keys / session tokens:
-- **Windows**: `%APPDATA%\AiUsage\config.json`
-- **macOS/Linux**: `~/.config/AiUsage/config.json`
+> Tip (Windows): if the tray icon hides in the overflow (⌃) flyout, drag it onto the
+> taskbar, or enable it under Settings → Personalization → Taskbar → *Other system tray icons*.
 
-See [config.example.json](https://github.com/KamilBugaj/ai-usage-app-releases/blob/main/config.example.json)
-for the full list of fields.
+### Connecting providers
 
-### Where to find your keys and tokens
+Everything is done from the in-app **Settings** panel — no config files, no DevTools,
+no token pasting. Each provider has a **Connect** button (and **Disconnect** to revoke):
 
-**Anthropic API** (`anthropicApiKey`):
-https://console.anthropic.com/account/keys
+- **Claude.ai** — Connect opens a login window; sign in once and the app reuses the
+  session to read your 5h + weekly limits.
+- **ChatGPT** — Connect opens a login window. Note: ChatGPT only exposes usage data on
+  **paid plans** (Plus / Pro / Codex). On a free account the tile says so — there's no
+  quota API to read.
+- **GitHub Copilot** — Connect starts a GitHub **device-flow** sign-in: your browser
+  opens with a code to authorize. After that the tile shows your premium-request quota.
 
-**OpenAI API** (`openAiApiKey`):
-https://platform.openai.com/api-keys — requires an owner/admin key.
+### Customising the dashboard
 
-**Claude.ai** (`sessionKey`, `organizationId`):
-1. Open claude.ai in your browser and log in.
-2. DevTools (F12) → Application → Cookies → find `sessionKey`.
-3. DevTools → Network → any request to api.claude.ai → look for the `X-Org-Id` header
-   or an `/organizations/<id>/` segment in the URL.
+In Settings you can also pick a **theme** (Mocha / Latte / Nord) and accent colour,
+**enable/disable** tiles, **drag to reorder** them, switch each tile between **small/large**,
+and set an **alert threshold** (default 80%) that highlights a tile when usage gets close.
 
-**ChatGPT** (`sessionToken`):
-1. Open chatgpt.com and log in.
-2. DevTools → Application → Cookies → `__Secure-next-auth.session-token`.
-
-**GitHub Copilot**: auto-detected from VS Code logs — no configuration needed.
+Config is stored at `%APPDATA%\AiUsage\config.json` (Windows) or
+`~/.config/AiUsage/config.json` (macOS/Linux), but you normally never need to touch it.
 
 ## Reporting issues
 
